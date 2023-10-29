@@ -159,22 +159,22 @@ describe("API Test Suite", async () => {
         expect(res.data.name).equal('Husky');
     })
 
-    // it("should allows uploading Pet’s image", async () => {
-    // const FormData = require('form-data');
-    // const fs = require('fs/promises');
-    // const form = new FormData();
-    // const image = await fs.readFile('./pexels-alotrobo-2848707.jpg');
-    // form.append('additionalMetadata', 'eu sunt consequat veniam');
-    // form.append('file', image, 'pexels-alotrobo-2848707.jpg');
-    // const response = await axios.post('https://petstore.swagger.io/v2/pet/5/uploadImage', form, {
-    //     headers: {
-    //         //'Content-Type': 'multipart/form-data',
-    //         'Authorization': { api_key: "special-key" },
-    //         ...form.getHeaders()
-    //     },
-    // })
-    // expect(response.status).to.equal(200);
-    // });
+    it("should allows uploading Pet’s image", async () => {
+    const FormData = require('form-data');
+    const fs = require('fs/promises');
+    const form = new FormData();
+    const image = await fs.readFile('./pexels-alotrobo-2848707.jpg');
+    form.append('additionalMetadata', 'eu sunt consequat veniam');
+    form.append('file', image, 'pexels-alotrobo-2848707.jpg');
+    const response = await axios.post('https://petstore.swagger.io/v2/pet/5/uploadImage', form, {
+        headers: {
+            //'Content-Type': 'multipart/form-data',
+            'Authorization': { api_key: "special-key" },
+            ...form.getHeaders()
+        },
+    })
+    expect(response.status).to.equal(200);
+    });
     
     it("shoul allows deleting Pet", async () => {
         const res = await axios({
