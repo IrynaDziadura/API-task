@@ -46,29 +46,30 @@ describe("API Test Suite", async () => {
             headers: {
                 'api_key': "special-key",
                 'Content-Type': 'application/json'
-            }
-            [
-                {
-                    id: 0,
-                    username: "NewFirst",
-                    firstName: "irynka",
-                    lastName: "irynkairynkanew",
-                    email: "iryna1888888@test.com",
-                    password: "test123456",
-                    phone: "894561223",
-                    userStatus: 0
-                },
-                {
-                    id: 0,
-                    username: "NewOne",
-                    firstName: "irynka",
-                    lastName: "irynkanew",
-                    email: "iryna1856@test.com",
-                    password: "test12345689",
-                    phone: "12345689",
-                    userStatus: 0
-                }
-            ]
+            },
+            data:
+                [
+                    {
+                        id: 0,
+                        username: "NewFirst",
+                        firstName: "irynka",
+                        lastName: "irynkairynkanew",
+                        email: "iryna1888888@test.com",
+                        password: "test123456",
+                        phone: "894561223",
+                        userStatus: 0
+                    },
+                    {
+                        id: 0,
+                        username: "NewOne",
+                        firstName: "irynka",
+                        lastName: "irynkanew",
+                        email: "iryna1856@test.com",
+                        password: "test12345689",
+                        phone: "12345689",
+                        userStatus: 0
+                    }
+                ]
         })
         console.log(response.data);
         expect(response.data.code).to.equal(200);
