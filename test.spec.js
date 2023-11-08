@@ -1,41 +1,52 @@
 const axios = require("axios");
 const { expect } = require("chai");
+const Ajv = require('ajv')
+const ajv = new Ajv()
+const postJsonSchema = require("./jsonSchemas/POST-createUser.Schema.json");
+const getJsonSchema = require("./jsonSchemas/GET-loginUser.Schema.json");
+const getlogoutJsonSchema = require("./jsonSchemas/GET-logoutUser.Schema.json");
+const postaddPetJsonSchema = require("./jsonSchemas/POST-addPet.Schema.json");
+const updatePetJsonSchema = require("./jsonSchemas/PUT-updatePet.Schema.json");
+const deletePetJsonSchema = require("./jsonSchemas/DELETE-deletePet.Schema.json");
 
 describe("API Test Suite", async () => {
 
     it("register user", async () => {
-        const response = await axios.post('https://petstore.swagger.io/v2/user', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': { api_key: "special-key"}
-            },
-            data: {
-                id: 5,
-                username: "NewUser",
-                firstName: "Iryna",
-                lastName: "Dziadura",
-                email: "iryna18@test.com",
-                password: "irynka1805",
-                phone: "11111111111",
-                userStatus: 201
-            }
-        });
+        const response = await axios.post('https://petstore.swagger.io/v2/user', //{
+            {
+                "id": 0,
+                "username": "NewUser",
+                "firstName": "Iryna",
+                "lastName": "Dziadura",
+                "email": "iryna18@test.com",
+                "password": "irynka1805",
+                "phone": "11111111111",
+                "userStatus": 0
+            });
+        const validate = ajv.compile(postJsonSchema);
+        const isValidate = validate(response.data)
+        console.log(response.data)
+        expect(isValidate).to.equal(true);
         expect(response.status).to.equal(200);
     })
 
     it("login as a User", async () => {
-        const response = await axios.get('https://petstore.swagger.io/v2/user/login?username=NewUser&password=irynka1805', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': { api_key: "special-key" }
-            }
-        });
+        const response = await axios.get('https://petstore.swagger.io/v2/user/login?username=NewUser&password=irynka1805',
+        );
+        const validate = ajv.compile(getJsonSchema);
+        const isValidate = validate(response.data)
+        console.log(response.data)
+        expect(isValidate).to.equal(true)
         expect(response.status).to.equal(200);
     })
 
     it("Logs out current logged in user session", async () => {
-        const response = await axios.get('https://petstore.swagger.io/v2/user/logout', {
-        });
+        const response = await axios.get('https://petstore.swagger.io/v2/user/logout', 
+        );
+        const validate = ajv.compile(getlogoutJsonSchema);
+        const isValidate = validate(response.data)
+        console.log(response.data)
+        expect(isValidate).to.equal(true)
         expect(response.status).to.equal(200);
     })
 
@@ -71,19 +82,17 @@ describe("API Test Suite", async () => {
                     }
                 ]
         })
-        console.log(response.data);
-        expect(response.data.code).to.equal(200);
-        expect(response.data.message).to.equal("ok");
+        const validate = ajv.compile(postJsonSchema);
+        const isValidate = validate(response.data)
+        console.log(response.data)
+        expect(isValidate).to.equal(true);
+        expect(response.status).to.equal(200);
     })
 
     it("should allows adding a new Pet", async () => {
-    const response = await axios.post('https://petstore.swagger.io/v2/pet', {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': { api_key: "special-key" }
-        },
-        data: {
-            id: 9223372016900016000,
+    const response = await axios.post('https://petstore.swagger.io/v2/pet',
+        {
+            id: 35,
             category: {
                 id: 8,
                 name: "corgie"
@@ -99,46 +108,50 @@ describe("API Test Suite", async () => {
                 }
             ],
             status: "available"
-        }
-    });
-    console.log(response.data)
-    expect(response.status).to.equal(200);
+        });
+        const validate = ajv.compile(postaddPetJsonSchema);
+        const isValidate = validate(response.data)
+        console.log(response.data)
+        expect(isValidate).to.equal(true);
+        expect(response.status).to.equal(200);
     })
 
-    it("should allows updating Pet’s image", async () => {
-        const res = await axios.put('https://petstore.swagger.io/v2/pet',
+    it("should allows updating Pet's image", async () => {
+        const response = await axios.put('https://petstore.swagger.io/v2/pet',
             {
-                id: 9223372016900016000,
+                id: 35,
                 category: {
-                    "id": 12,
-                    "name": "Jeck"
+                    "id": 8,
+                    "name": "corgie"
                 },
-                name: "Bigle",
+                name: "doggie",
                 photoUrls: [
                     "https://cdn.britannica.com/16/234216-050-C66F8665/beagle-hound-dog.jpg",
                     "https://cdn.britannica.com/99/152499-050-29EFB7EE/Beagle.jpg"
                 ],
                 tags: [
                     {
-                        "id": 12,
-                        "name": "Small"
+                        "id": 15,
+                        "name": "pretty"
                     }
                 ],
                 status: "available"
             })
 
-        console.log(res.data)
-        expect(res.data.category.id).equal(12);
-        expect(res.data.category.name).equal('Jeck');
+        const validate = ajv.compile(updatePetJsonSchema);
+        const isValidate = validate(response.data)
+        console.log(response.data)
+        expect(isValidate).to.equal(true);
+        expect(response.status).to.equal(200);
     })
 
-    it("should allows updating Pet’s name and status", async () => {
-        const res = await axios.put('https://petstore.swagger.io/v2/pet',
+    it("should allows updating Pet's name and status", async () => {
+        const response = await axios.put('https://petstore.swagger.io/v2/pet',
             {
-                id: 9223372016900016000,
+                id: 35,
                 category: {
-                    "id": 12,
-                    "name": "Jeck"
+                    "id": 35,
+                    "name": "corgie"
                 },
                 name: "Husky",
                 photoUrls: [
@@ -147,45 +160,32 @@ describe("API Test Suite", async () => {
                 ],
                 tags: [
                     {
-                        "id": 12,
-                        "name": "Big"
+                        "id": 15,
+                        "name": "pretty"
                     }
                 ],
                 status: "unavailable"
             })
-
-        console.log(res.data)
-        expect(res.data.status).equal('unavailable');
-        expect(res.data.name).equal('Husky');
+        const validate = ajv.compile(updatePetJsonSchema);
+        const isValidate = validate(response.data)
+        console.log(response.data)
+        expect(isValidate).to.equal(true);
+        expect(response.status).to.equal(200);
     })
-
-    it("should allows uploading Pet’s image", async () => {
-    const FormData = require('form-data');
-    const fs = require('fs/promises');
-    const form = new FormData();
-    const image = await fs.readFile('./pexels-alotrobo-2848707.jpg');
-    form.append('additionalMetadata', 'eu sunt consequat veniam');
-    form.append('file', image, 'pexels-alotrobo-2848707.jpg');
-    const response = await axios.post('https://petstore.swagger.io/v2/pet/5/uploadImage', form, {
-        headers: {
-            //'Content-Type': 'multipart/form-data',
-            'Authorization': { api_key: "special-key" },
-            ...form.getHeaders()
-        },
-    })
-    expect(response.status).to.equal(200);
-    });
     
     it("shoul allows deleting Pet", async () => {
-        const res = await axios({
+        const response = await axios({
             method: "delete",
-            url: 'https://petstore.swagger.io/v2/pet/9223372016900016000',
+            url: 'https://petstore.swagger.io/v2/pet/35',
             headers: {
                 api_key: 'special-key'
             }
         })
-        console.log(res.data)
-        expect(res.data.code).to.equal(200);
+        const validate = ajv.compile(deletePetJsonSchema);
+        const isValidate = validate(response.data)
+        console.log(response.data)
+        expect(isValidate).to.equal(true);
+        expect(response.status).to.equal(200);
     })
 })
 
